@@ -1,6 +1,8 @@
 # pypoisson2
 
-Python bindings for Screened Poisson Surface Reconstruction with optional grid output, density values, and gradient vectors.
+A new Python bindings for Poisson Reconstruction with optional grid output, density values, and gradient vectors.
+
+The corresponding C++ version: v18.74 of [PoissonRecon](https://github.com/mkazhdan/PoissonRecon) by [mkazhdan](https://github.com/mkazhdan).
 
 ## Features
 - Poisson surface reconstruction via C++ libraries (int32/int64 auto-selection)
