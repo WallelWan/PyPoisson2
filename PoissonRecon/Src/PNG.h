@@ -32,7 +32,12 @@ DAMAGE.
 #include <stdio.h>
 #include <vector>
 #include "Image.h"
+#include <zlib.h>
+#ifdef _WIN32
 #include "PNG/png.h"
+#else
+#include <png.h>
+#endif
 
 namespace PoissonRecon
 {

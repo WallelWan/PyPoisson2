@@ -14,10 +14,57 @@ The corresponding C++ version: v18.74 of [PoissonRecon](https://github.com/mkazh
 - Python 3.9+
 - NumPy
 - Compiled PoissonRecon shared libraries in `poisson/lib/`, `lib/`, or `build/`
+- C++ build deps: `cmake`, `g++`, `make`, `zlib`, `libpng`, `libjpeg`, OpenMP
 
 ## Installation
 ```bash
 pip install -e .
+```
+
+## Quick Start
+```bash
+# Build shared libs
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+make -C build -j$(nproc)
+
+# Install Python package
+pip install -e .
+
+# Run a basic reconstruction
+python - <<'PY'
+import numpy as np
+from poisson import poisson_reconstruction
+
+points = np.random.randn(1000, 3).astype(np.float64)
+points /= np.linalg.norm(points, axis=1, keepdims=True)
+normals = points.copy()
+
+vertices, faces = poisson_reconstruction(points, normals, depth=6)
+print(vertices.shape, faces.shape)
+PY
+```
+
+## Build (PoissonRecon + Dump Tool)
+This repo builds two executables:
+- `PoissonRecon` in `build/`
+- `PoissonReconDump` in `build_dump/` (exports density/gradients for test alignment)
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+make -C build -j$(nproc)
+
+cmake -S poisson_dump -B build_dump -DCMAKE_BUILD_TYPE=Release
+make -C build_dump -j$(nproc)
+```
+
+Note: Do not define `FAST_COMPILE` if you need full boundary/degree support.
+
+## PyPI Release (Maintainers)
+```bash
+python -m pip install --upgrade build twine
+python -m build
+python -m twine check dist/*
+python -m twine upload dist/*
 ```
 
 ## Basic Usage
@@ -55,14 +102,20 @@ vertices, faces, grid, iso_value, densities, gradients = poisson_reconstruction(
 - `validate_finite` (default True), `force_big` (force int64 library)
 
 ## Tests
-Tests use `unittest` and are run as scripts (not pytest).
+Tests use `unittest` and are run as modules (not pytest).
 
 ```bash
-python poisson/tests/test_poisson.py
-PYTHONPATH=. python poisson/tests/test_phase2_boundary.py
-PYTHONPATH=. python poisson/tests/test_phase3_advanced_outputs.py
+python -m unittest poisson.tests.exe.test_exe_consistency_core
+python -m unittest poisson.tests.exe.test_exe_consistency_params
+python -m unittest poisson.tests.exe.test_exe_boundary
+python -m unittest poisson.tests.exe.test_dump_outputs
+python -m unittest poisson.tests.python.test_python_validation
 ```
 
+Executable paths (optional overrides):
+- `POISSON_EXE_PATH` defaults to `build/PoissonRecon`
+- `POISSON_DUMP_EXE_PATH` defaults to `build_dump/PoissonReconDump`
+
 Notes:
-- `poisson/tests/test_phase3_advanced_outputs.py` is long-running and may take several minutes.
-- If `poisson` cannot be imported, ensure `PYTHONPATH=.` (or run from repo root).
+- Boundary tests default to the horse dataset: `poisson/examples/horse_with_normals.xyz`.
+- `PoissonReconDump` supports ASCII PLY inputs (x y z nx ny nz).

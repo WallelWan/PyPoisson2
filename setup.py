@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+from pathlib import Path
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
@@ -51,15 +52,29 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
+README_PATH = Path(__file__).with_name('README.md')
+LONG_DESCRIPTION = README_PATH.read_text(encoding='utf-8')
+
 setup(
     name='pypoisson2',
     version='1.0.0',
     author='Michael Kazhdan (Library), Adaptive Solvers (Bindings)',
     description='Modern Python bindings for Poisson Surface Reconstruction (v18.74)',
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
+    url='https://github.com/mkazhdan/PoissonRecon',
+    license='BSD-3-Clause',
     packages=find_packages(),
     ext_modules=[CMakeExtension('pypoisson_cpp')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
+    include_package_data=True,
     install_requires=['numpy'],
-    python_requires='>=3.6',
+    python_requires='>=3.9',
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'Programming Language :: C++',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: POSIX :: Linux',
+    ],
 )

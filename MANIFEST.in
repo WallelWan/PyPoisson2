@@ -1,0 +1,7 @@
+include CMakeLists.txt
+include CMakeLists.dump.txt
+include LICENSE
+recursive-include PoissonRecon/Src *
+recursive-include poisson/src *.cpp *.h
+recursive-include poisson/tools *.cpp
+recursive-include poisson/examples *.xyz

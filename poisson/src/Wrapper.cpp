@@ -20,11 +20,9 @@
 #include "Geometry.h"
 #include "MyMiscellany.h"
 #include "MultiThreading.h"
+#include "WrapperApi.h"
 
 using namespace PoissonRecon;
-
-// Forward declaration
-struct ReconstructionParams;
 
 // =================================================================================
 // 1. Adapter Classes (Bridging Numpy <-> C++ Library)
@@ -122,51 +120,6 @@ struct NumpyOutputFaceStream : public Reconstructor::OutputFaceStream< 2 > // 2 
 // =================================================================================
 // 2. Data Structures for C-ABI
 // =================================================================================
-
-struct ReconstructionParams {
-    int depth;
-    int full_depth;
-    int cg_depth;
-    int iters;
-    int degree;           // B-Spline Degree (1 or 2)
-    double scale;
-    double samples_per_node;
-    double point_weight;
-    bool confidence;
-    bool verbose;
-    int parallel_type;    // -1=Auto, 0=OpenMP, 1=Async, 2=None
-    int grid_depth;       // If > 0, extract implicit field
-
-    // NEW: Core solver parameters (P0)
-    bool exact_interpolation;   // --exact
-    bool show_residual;          // --showResidual
-    double low_depth_cutoff;     // --lowDepthCutOff
-
-    // NEW: Solver depth controls (P0)
-    double width;                // --width
-    double cg_solver_accuracy;   // --cgAccuracy
-    int base_depth;              // --baseDepth
-    int solve_depth;             // --solveDepth
-    int kernel_depth;            // --kernelDepth (P1)
-    int base_v_cycles;           // --baseVCycles (P1)
-
-    // NEW: Mesh extraction parameters (P0)
-    bool force_manifold;         // --nonManifold (inverted logic)
-    bool polygon_mesh;           // --polygonMesh (P2)
-
-    // NEW: Grid output parameters (P0)
-    bool primal_grid;            // --primalGrid
-    bool linear_fit;             // --linearFit
-    bool grid_coordinates;       // --gridCoordinates (P2)
-
-    // NEW: Boundary conditions (P2)
-    int boundary_type;           // 0=Free, 1=Dirichlet, 2=Neumann
-    bool dirichlet_erode;        // --dirichletErode
-
-    // NEW: Advanced output parameters (P3)
-    bool output_density;          // --density
-    bool output_gradients;        // --gradients
-};
 
 // Opaque handle to store the result in C++ heap
 struct MeshHandle {
