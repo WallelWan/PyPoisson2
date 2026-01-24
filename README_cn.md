@@ -1,5 +1,7 @@
 # pypoisson2
 
+[![PyPI version](https://badge.fury.io/py/pypoisson2.svg)](https://badge.fury.io/py/pypoisson2)
+
 基于 Screened Poisson Surface Reconstruction 的 Python 绑定，支持网格场、密度与梯度输出。
 
 ## 功能
