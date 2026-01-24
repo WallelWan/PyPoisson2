@@ -1,33 +1,25 @@
-# Python
-__pycache__/
-*.py[cod]
-*.so
-*.dylib
-*.dll
+# Build artifacts
 build/
+build_dump/
 dist/
 *.egg-info/
 
-# CMake
+# Python cache
+__pycache__/
+*.pyc
+
+# Shared libraries
+*.so
+*.pyd
+*.dylib
+
+# Local CMake
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
 
-# VS Code
-.vscode/
-
-# Output
-*.ply
-poisson/lib/
-
-# Test outputs
-test_*.ply
-test_sphere.ply
-test_cube.ply
-test_half_sphere.ply
-test_converted.ply
-
-# History
-.history/
+# Virtual environments
+.venv/
+venv/
 .opencode/
